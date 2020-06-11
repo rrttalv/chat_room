@@ -29,6 +29,7 @@ app.get("*", (req, res) => {
 global.messageSocket = queue.connect(io);
 
 app.use((err, req, res, next) => {
+    console.log(err);
     if(typeof err === 'object'){
         res.status(400).json(err);
         return

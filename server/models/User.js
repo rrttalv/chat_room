@@ -24,7 +24,7 @@ const model = mongoose.model('User', userSchema);
 export default model;
 
 export const authenticateUserByName = async (firstName, lastName) => {
-    const user = await model.findOne({'fullName': fName + lName});
+    const user = await model.findOne({'fullName': firstName + lastName});
     if(!user){
         const fullName = lastName + lastName;
         const user = new model({
