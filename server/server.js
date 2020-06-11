@@ -3,20 +3,22 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import http from 'http';
 import path from 'path';
-
+import auth from './routes/auth';
 
 require('./config');
 
 dotenv.config({path: path.resolve(__dirname, '../.env')});
-const indexPath = path.join(__dirname, "../frontend/public/index.html");
+const indexPath = path.join(__dirname, '../frontend/public/index.html');
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.get("*", (res, res) => {
-    res.sendFile(path.join(indexPath, "index.html"));
+app.use('/auth', auth)
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(indexPath, 'index.html'));
 });
 
 

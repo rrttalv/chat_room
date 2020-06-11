@@ -7,6 +7,9 @@ const userSchema = new Schema({
     lastName: {
         type: String
     },
+    fullName: {
+        type: String
+    },
     conversations: {
         type: [
             {
@@ -17,4 +20,19 @@ const userSchema = new Schema({
     }
 });
 
-export default mongoose.model('User', userSchema);
+const model = mongoose.model('User', userSchema);
+export default model;
+
+export const authenticateUserByName = async (firstName, lastName) => {
+    const user = await model.findOne({'fullName': fName + lName});
+    if(!user){
+        const fullName = lastName + lastName;
+        const user = new model({
+            firstName,
+            lastName,
+            fullName,
+        });
+        return await user.save();
+    }
+    return user;
+}
