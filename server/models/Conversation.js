@@ -1,4 +1,4 @@
-import mongoose, { Schema, mongo } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const convoSchema = new Schema({
     participants: {
@@ -12,7 +12,10 @@ const convoSchema = new Schema({
     messages: {
         type: mongoose.Schema.Types.Mixed,
         default: []
+    },
+    roomID: {
+        type: String
     }
 });
 
-export default mongoose.Model('Conversation', convoSchema);
+export default mongoose.model('Conversation', convoSchema);

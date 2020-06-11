@@ -1,4 +1,4 @@
-import User, {
+import {
     authenticateUserByName
 } from '../models/User';
 import express from 'express';
