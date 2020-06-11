@@ -1,14 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 import Conv from './Conversation';
 const userSchema = new Schema({
-    firstName: {
+    userName: {
         type: String,
-    },
-    lastName: {
-        type: String
-    },
-    fullName: {
-        type: String
     },
     conversations: {
         type: [
@@ -22,14 +16,11 @@ const userSchema = new Schema({
 
 const model = mongoose.model('User', userSchema);
 
-export const authenticateUserByName = async (firstName, lastName) => {
-    const user = await model.findOne({'fullName': firstName + lastName});
+export const authenticateUserByName = async userName => {
+    const user = await model.findOne({'userName': userName});
     if(!user){
-        const fullName = lastName + lastName;
         const user = new model({
-            firstName,
-            lastName,
-            fullName,
+            userName,
         });
         return await user.save();
     }
