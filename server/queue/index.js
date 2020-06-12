@@ -7,8 +7,12 @@ const saveQueue = new Queue('saveConversation', {
     redis: redisConfig
 });
 
-saveQueue.process(async job => {
-    return await saveMessage(job.data);
+saveQueue.process((job, done) => {
+    saveMessage(job.data).then(() => {
+        done(null);
+    }).catch(err => {
+        done(new Error(err));
+    })
 });
 
 export default {
@@ -18,7 +22,7 @@ export default {
                 socket.join(roomID);
             })
             socket.on('message', data => {
-                saveQueue(data);
+                saveQueue.add(data);
             })
         });
     }
