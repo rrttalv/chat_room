@@ -1,0 +1,17 @@
+.message-input.form-control {
+    border: unset;
+    border-bottom: 2px solid rgba(0,0,0, 0.1);
+    border-radius: 0;
+    padding-bottom: 10px;
+    transition: 0.25s linear;
+}
+
+.message-input.form-control:focus {
+    box-shadow: none!important;
+    border: unset;
+    border-bottom: 2px solid rgba(0,0,0, 0.2);
+}
+
+.message-input.form-control::placeholder {
+    color: gray;
+}
