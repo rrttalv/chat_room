@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Route, Switch } from "react-router-dom";
 import { AuthRoute } from "./AuthRoute"
 import { connect } from 'react-redux';
-import OnlineList from './components/OnlineList/index';
+import MessagingPage from './components/MessagingPage/index';
 import Login from './components/Login/index';
-import MessageView from './components/MessageView/index';
+import MessageView from './components/MessagingPage';
 
 class Routes extends Component {
     render(){
@@ -15,7 +15,7 @@ class Routes extends Component {
             :
             <Switch>
                 <Route exact path="/" component={Login} />
-                <AuthRoute authenticated={isAuth} exact path="/list" component={OnlineList} />
+                <AuthRoute authenticated={isAuth} exact path="/list" component={MessagingPage} />
                 <AuthRoute authenticated={isAuth} exact path="/list/:conversationID" component={MessageView} />
             </Switch>
         )

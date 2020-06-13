@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client';
-import { setSocket } from '../../actions/conversationActions';
+import { setSocket, setOnline } from '../../actions/conversationActions';
 import { connect } from 'react-redux';
 
-class OnlineList extends Component {
+class MessagingPage extends Component {
 
     constructor(props){
         super(props);
@@ -27,8 +27,7 @@ class OnlineList extends Component {
         };
         socket.on('public_join', data => {
             const sanitizedList = data.list.filter(u => u !== userName);
-            console.log(data)
-            this.setState({userList: sanitizedList});
+            this.props.setOnline(sanitizedList);
         });
     }
 
@@ -46,4 +45,4 @@ const propMap = state => ({
     user: state.auth.user
 })
 
-export default connect(propMap, {setSocket})(OnlineList);
+export default connect(propMap, {setSocket, setOnline})(MessagingPage);

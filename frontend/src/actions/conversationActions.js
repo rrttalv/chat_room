@@ -1,5 +1,5 @@
 import {
-    STOP_LOADING,
+    SET_ONLINE,
     GET_CONVERSATIONS,
     LOADING_CONVERSATIONS,
     SET_SOCKET
@@ -8,7 +8,10 @@ import {
     getOpts
 } from './authActions';
 
-
+/*
+    This can be used to display older conversations.
+    Not going to be used for now.
+*/
 export const listConversations = () => (dispatch, getState) => {
     dispatch({
         type: LOADING_CONVERSATIONS,
@@ -33,3 +36,11 @@ export const setSocket = socket => (dispatch, getState) => {
         payload: {...prevState, socket}
     });
 };
+
+export const setOnline = data => (dispatch, getState) => {
+    const prevState = getState().conversations;
+    dispatch({
+        type: SET_ONLINE,
+        payload: {...prevState, online: data}
+    })
+}

@@ -2,11 +2,13 @@ import {
     LOADING_CONVERSATIONS, 
     STOP_LOADING, 
     GET_CONVERSATIONS,
-    SET_SOCKET
+    SET_SOCKET,
+    SET_ONLINE
 } from '../actions/constants';
 
 const initState = {
     conversations: [],
+    online: [],
     socket: undefined,
     loading: false,
 }
@@ -21,6 +23,7 @@ export default (state=initState, action) => {
         case STOP_LOADING:
         case GET_CONVERSATIONS:
         case SET_SOCKET:
+        case SET_ONLINE:
             return {
                 ...state,
                 loading: false,
