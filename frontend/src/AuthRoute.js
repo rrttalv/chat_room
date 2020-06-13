@@ -3,7 +3,6 @@ import { Redirect, Route } from 'react-router-dom';
 
 export const AuthRoute = ({ component: Component, authenticated, ...rest }) => {
     let redirTo = "/";
-    console.log(authenticated)
     return (
         <Route 
         {...rest} 

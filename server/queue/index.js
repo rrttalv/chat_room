@@ -15,14 +15,21 @@ saveQueue.process((job, done) => {
     })
 });
 
+const activeUsers = [];
+
 export default io => {
-    io.on('connection', client => {
-        console.log('Socket connection established')
-        client.on('subscribe', roomID => {
-            socket.join(roomID);
-        })
-        client.on('message', data => {
+    io.on('connection', socket => {
+        socket.on('subscribe', data => {
+            const { room, user } = data;
+            socket.join(room);
+            if(activeUsers.indexOf(user) === -1){
+                activeUsers.push(user);
+            }
+            console.log(activeUsers)
+            io.in(room).emit('public_join', {list: activeUsers});
+        });
+        socket.on('message', data => {
             saveQueue.add(data);
-        })
+        });
     });
 }
