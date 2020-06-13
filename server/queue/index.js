@@ -8,11 +8,13 @@ const saveQueue = new Queue('saveConversation', {
 });
 
 saveQueue.process((job, done) => {
-    saveMessage(job.data).then(() => {
+    console.log(job.data);
+    done(null);
+    /*saveMessage(job.data).then(() => {
         done(null);
     }).catch(err => {
         done(new Error(err));
-    })
+    })*/
 });
 
 const activeUsers = [];
@@ -38,9 +40,15 @@ export default io => {
             }
             io.in('public-room').emit('public_join', {list: activeUsers})
         });
+        socket.on('join_private', data => {
+            const { room } = data;
+            console.log(data);
+            //socket.join(room);
+        })
         socket.on('send_message', data => {
             console.log(data);
             //saveQueue.add(data);
         });
+        socket.on('seen_message', data => {})
     });
 }

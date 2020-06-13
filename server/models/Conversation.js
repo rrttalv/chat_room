@@ -9,6 +9,12 @@ const convoSchema = new Schema({
             }
         ]
     },
+    /**
+     * An individual message looks like this:
+     * userID: ID of the sender
+     * message: message content
+     * seen: true or false
+    */
     messages: {
         type: mongoose.Schema.Types.Mixed,
         default: []
@@ -21,22 +27,27 @@ const convoSchema = new Schema({
 const model = mongoose.model('Conversation', convoSchema);
 
 export const saveMessage = async data => {
-    const { messages, _id } = data;
+    const { userID, message, seen, _id } = data;
+    const newMessage = {
+        userID,
+        message,
+        seen,
+    };
     if(_id){
-        return await model.updateOne({_id: _id}, {'$set': {'messages': messages}});
+        return await model.updateOne({_id: _id}, {'$push': {'messages': newMessage}});
     }else{
-        return await saveNewConversation(data);
+        return await saveNewConversation(data, newMessage);
     }
 }
 
-export const saveNewConversation = async data => {
-    const { sender, receiver, messages, roomID } = data;
+export const saveNewConversation = async (data, message) => {
+    const { sender, receiver, roomID } = data;
     const conv = new model({
         participants: [
             {...sender}, 
             {...receiver}
         ],
-        messages: [...messages],
+        messages: [message],
         roomID,
     });
     return await conv.save();

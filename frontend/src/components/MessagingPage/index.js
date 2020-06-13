@@ -26,6 +26,7 @@ class MessagingPage extends Component {
                 room: 'public-room', 
                 user: user,
             });
+            this.props.setSocket(socket);
         };
         socket.on('public_join', data => {
             const sanitizedList = data.list.filter(({_id}) => _id !== user._id);
@@ -34,8 +35,11 @@ class MessagingPage extends Component {
     }
 
     openChat = id => {
+        let { socket } = this.props.conversations;
         this.setState({displayChat: true});
-        console.log(id);
+        socket.emit('join_private', {
+            room: id,
+        });
     }
 
     render() {

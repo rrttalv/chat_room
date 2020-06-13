@@ -45,7 +45,7 @@ export const setSocket = socket => (dispatch, getState) => {
     const prev = getPrev(getState);
     dispatch({
         type: SET_SOCKET,
-        payload: {...prev, socket}
+        payload: {...prev, socket: socket}
     });
 };
 
