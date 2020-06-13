@@ -1,0 +1,18 @@
+.btn.send {
+    width: 100%;
+    margin-top: 8%;
+    background-color: #c4c8cb!important;
+    border-radius: 10%;
+    color: #ffffff;
+    transition: 0.2s linear;
+    border-radius: 50px;
+    font-weight: 600;
+    padding: 0.5rem;
+}
+
+.btn.send:hover {
+    width: 100%;
+    margin-top: 8%;
+    background-color: #4967e2!important;
+    color: #ffffff;
+}

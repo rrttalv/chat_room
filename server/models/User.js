@@ -45,6 +45,10 @@ export const getUserConversations = async userID => {
     return user;
 };
 
+export const findUser = async id => {
+    return await model.findOne({_id: id});
+}
+
 export const getSingleConversation = async conversationID => {
     return await Conv.findOne({_id: conversationID});
 }

@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from 'react'
-import { Input, FormGroup } from 'reactstrap';
+import { Input, FormGroup, Form } from 'reactstrap';
 import './style.css';
 import MessageInput from '../MessageInput';
-export default class Login extends Component {
+import SendBtn from '../SendBtn';
+import { connect } from 'react-redux';
+import { initUser } from '../../actions/authActions';
+class Login extends Component {
 
     constructor(props){
         super(props);
@@ -12,23 +15,46 @@ export default class Login extends Component {
     }
 
     handleChange = e => {
+        if(e.target.keyCode === 13){
+        }
         this.setState({[e.target.name]: e.target.value});
     }
 
+    handleAuth = () => {
+        this.props.initUser({...this.state});
+    }
+
     render() {
+        const { loading } = this.props.auth;
         return (
             <Fragment>
                 <div id="seperator"></div>
-                <div>
+                <Form>
                     <h1>Join the chat!</h1>
+                    {
+                    !loading ? 
                     <FormGroup>
                         <MessageInput 
-                        placeHolder={"Username"}
-                        handleChange={this.handleChange}
+                            placeHolder={"username"}
+                            name={"username"}
+                            handleChange={this.handleChange}
                         />
-                    </FormGroup>
-                </div>
+                        <SendBtn 
+                        handleClick={this.handleAuth}
+                        text={"Start"}
+                        />
+                    </FormGroup> 
+                    : 
+                    <div></div>
+                    }
+                </Form>
             </Fragment>
         )
     }
 }
+
+const propMap = state => ({
+    auth: state.auth,
+})
+
+export default connect(propMap, { initUser })(Login)
