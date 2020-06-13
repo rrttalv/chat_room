@@ -1,4 +1,4 @@
-import {LOADING_CONVERSATIONS, GET_CONVERSATIONS} from '../actions/constants';
+import {LOADING_CONVERSATIONS, STOP_LOADING, GET_CONVERSATIONS} from '../actions/constants';
 
 const initState = {
     conversations: [],
@@ -12,6 +12,7 @@ export default (state=initState, action) => {
                 ...state,
                 loading: true,
             }
+        case STOP_LOADING:
         case GET_CONVERSATIONS:
             return {
                 ...state,

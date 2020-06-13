@@ -12,16 +12,12 @@ export default (state = initState, action) => {
                 ...state,
                 loading: true,
             }
+        case STOP_LOADING:
         case AUTH_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 ...action.payload,
-            }
-        case STOP_LOADING:
-            return {
-                loading: false,
-                ...action.payload
             }
         default: 
             return state

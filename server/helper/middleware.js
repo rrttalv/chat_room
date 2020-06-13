@@ -20,6 +20,7 @@ export const authenticate = (req, res, next) => {
             })
         }
     }catch(err){
+        //If error then the user in the header could not be parsed
         next(err);
     }
 }

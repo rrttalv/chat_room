@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import http from 'http';
 import path from 'path';
 import auth from './routes/auth';
+import dashboard from './routes/dashboard';
 import socket from 'socket.io';
 import queue from './queue';
 require('./config');
@@ -20,7 +21,8 @@ queue.connect(io);
 app.use(express.json());
 app.use(cors());
 
-app.use('/auth', auth)
+app.use('/auth', auth);
+app.use('/dash', dashboard);
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(indexPath, 'index.html'));
