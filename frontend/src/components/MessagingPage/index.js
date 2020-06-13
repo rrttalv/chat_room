@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import socketIOClient from 'socket.io-client';
-import { setSocket, setOnline } from '../../actions/conversationActions';
+import { setSocket, setOnline, updateChat } from '../../actions/conversationActions';
 import { connect } from 'react-redux';
 import UserElement from './UserElement';
-
+import './style.css'
 class MessagingPage extends Component {
 
     constructor(props){
         super(props);
         this.state = {
             userList: [],
+            displayChat: false,
         }
     }
 
@@ -28,17 +29,18 @@ class MessagingPage extends Component {
         };
         socket.on('public_join', data => {
             const sanitizedList = data.list.filter(({_id}) => _id !== user._id);
-            console.log(data)
             this.props.setOnline(sanitizedList);
         });
     }
 
-    startChat = id => {
+    openChat = id => {
+        this.setState({displayChat: true});
         console.log(id);
     }
 
     render() {
         const { online } = this.props.conversations;
+        const { _id } = this.props.user;
         return (
             <div id="list-container">
                 <h1>Currently online</h1>
@@ -47,12 +49,14 @@ class MessagingPage extends Component {
                     <UserElement 
                         key={i}
                         name={elem.userName}
-                        handleClick={() => this.startChat(elem.id)}
+                        handleClick={() => this.openChat(
+                            elem._id + '_' + _id
+                        )}
                     />
                 ))
                 :
-                <div>
-                    <h3>Nobody seems to be online :/</h3>    
+                <div id="list-empty">
+                    <h5>Nobody seems to be online :/</h5>    
                 </div>}
             </div>
         )
@@ -64,4 +68,4 @@ const propMap = state => ({
     user: state.auth.user
 })
 
-export default connect(propMap, {setSocket, setOnline})(MessagingPage);
+export default connect(propMap, {setSocket, setOnline, updateChat})(MessagingPage);

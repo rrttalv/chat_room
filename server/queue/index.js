@@ -16,7 +16,6 @@ saveQueue.process((job, done) => {
 });
 
 const activeUsers = [];
-const socketIDs = [];
 
 export default io => {
     io.on('connection', socket => {
@@ -38,9 +37,10 @@ export default io => {
                 activeUsers.splice(idx, 1);
             }
             io.in('public-room').emit('public_join', {list: activeUsers})
-        })
-        socket.on('message', data => {
-            saveQueue.add(data);
+        });
+        socket.on('send_message', data => {
+            console.log(data);
+            //saveQueue.add(data);
         });
     });
 }

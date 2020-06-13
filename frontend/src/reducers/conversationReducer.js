@@ -3,7 +3,8 @@ import {
     STOP_LOADING, 
     GET_CONVERSATIONS,
     SET_SOCKET,
-    SET_ONLINE
+    SET_ONLINE,
+    SET_CONVERSATION,
 } from '../actions/constants';
 
 const initState = {
@@ -11,6 +12,7 @@ const initState = {
     online: [],
     socket: undefined,
     loading: false,
+    selected: {},
 }
 
 export default (state=initState, action) => {
@@ -24,6 +26,7 @@ export default (state=initState, action) => {
         case GET_CONVERSATIONS:
         case SET_SOCKET:
         case SET_ONLINE:
+        case SET_CONVERSATION:
             return {
                 ...state,
                 loading: false,

@@ -2,7 +2,8 @@ import {
     SET_ONLINE,
     GET_CONVERSATIONS,
     LOADING_CONVERSATIONS,
-    SET_SOCKET
+    SET_SOCKET,
+    SET_CONVERSATION,
 } from './constants';
 import {
     getOpts
@@ -29,18 +30,33 @@ export const listConversations = () => (dispatch, getState) => {
     });
 };
 
+export const updateChat = data => (dispatch, getState) => {
+    const prev = getPrev(getState);
+    if(prev.selected.messages){
+        prev.selected.messages.push(data);
+    }
+    dispatch({
+        type: SET_CONVERSATION,
+        payload: {...prev}
+    });
+}
+
 export const setSocket = socket => (dispatch, getState) => {
-    const prevState = getState().conversations;
+    const prev = getPrev(getState);
     dispatch({
         type: SET_SOCKET,
-        payload: {...prevState, socket}
+        payload: {...prev, socket}
     });
 };
 
 export const setOnline = data => (dispatch, getState) => {
-    const prevState = getState().conversations;
+    const prev = getPrev(getState);
     dispatch({
         type: SET_ONLINE,
-        payload: {...prevState, online: data}
-    })
-}
+        payload: {...prev, online: data}
+    });
+};
+
+const getPrev = getState => {
+    return getState().conversations;
+};
