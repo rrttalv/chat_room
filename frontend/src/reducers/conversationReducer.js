@@ -1,7 +1,13 @@
-import {LOADING_CONVERSATIONS, STOP_LOADING, GET_CONVERSATIONS} from '../actions/constants';
+import {
+    LOADING_CONVERSATIONS, 
+    STOP_LOADING, 
+    GET_CONVERSATIONS,
+    SET_SOCKET
+} from '../actions/constants';
 
 const initState = {
     conversations: [],
+    socket: undefined,
     loading: false,
 }
 
@@ -14,6 +20,7 @@ export default (state=initState, action) => {
             }
         case STOP_LOADING:
         case GET_CONVERSATIONS:
+        case SET_SOCKET:
             return {
                 ...state,
                 loading: false,

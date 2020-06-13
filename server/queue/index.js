@@ -15,15 +15,14 @@ saveQueue.process((job, done) => {
     })
 });
 
-export default {
-    connect: io => {
-        io.on('connection', socket => {
-            socket.on('subscribe', roomID => {
-                socket.join(roomID);
-            })
-            socket.on('message', data => {
-                saveQueue.add(data);
-            })
-        });
-    }
-};
+export default io => {
+    io.on('connection', client => {
+        console.log('Socket connection established')
+        client.on('subscribe', roomID => {
+            socket.join(roomID);
+        })
+        client.on('message', data => {
+            saveQueue.add(data);
+        })
+    });
+}

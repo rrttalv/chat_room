@@ -1,7 +1,8 @@
 import {
     STOP_LOADING,
     GET_CONVERSATIONS,
-    LOADING_CONVERSATIONS
+    LOADING_CONVERSATIONS,
+    SET_SOCKET
 } from './constants';
 import {
     getOpts
@@ -22,5 +23,13 @@ export const listConversations = () => (dispatch, getState) => {
         });
     }).catch(err => {
         console.log(err);
+    });
+};
+
+export const setSocket = socket => (dispatch, getState) => {
+    const prevState = getState().conversations;
+    dispatch({
+        type: SET_SOCKET,
+        payload: {...prevState, socket}
     });
 };

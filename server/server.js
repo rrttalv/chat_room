@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import http from 'http';
 import path from 'path';
 import auth from './routes/auth';
 import dashboard from './routes/dashboard';
@@ -14,31 +13,34 @@ const indexPath = path.join(__dirname, '../frontend/public/index.html');
 
 const app = express();
 
-const io = socket(http.createServer(app));
-
-queue.connect(io);
-
 app.use(express.json());
 app.use(cors());
 
 app.use('/auth', auth);
 app.use('/dash', dashboard);
+const { SERVER_PORT: sp } = process.env;
 
-app.get("*", (req, res) => {
+const server = app.listen(sp, console.log.bind(console, 'Server started on port: ' + sp));
+
+const io = socket(server, {
+    path: '/socket',
+    serverClient: false,
+    pingInterval: 10000,
+    pingTimeout: 5000,
+    cookie:false,
+});
+
+queue(io);
+
+app.get("*", (req, res, next) => {
     res.sendFile(path.join(indexPath, 'index.html'));
 });
 
-global.messageSocket = queue.connect(io);
-
 app.use((err, req, res, next) => {
-    console.log(err);
+    //console.log(err);
     if(typeof err === 'object'){
         res.status(400).json(err);
         return
     }
     res.status(400).json({message: err});
 });
-
-const { SERVER_PORT: sp } = process.env;
-
-app.listen(sp || 8080, console.log.bind(console, 'Server started on port: ' + sp))

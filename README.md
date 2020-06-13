@@ -10,6 +10,8 @@ This project was built with the following versions
 
 ### Running in development
 
+The webserver should always run on port 8080 for the websocket connection to work.
+
 CD into both the /frontend directory and /server directory.
 
 Make sure you have a redis server up and running.
