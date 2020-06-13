@@ -22,10 +22,10 @@ export default io => {
         socket.on('subscribe', data => {
             const { room, user } = data;
             socket.join(room);
+            console.log(user)
             if(activeUsers.indexOf(user) === -1){
                 activeUsers.push(user);
             }
-            console.log(activeUsers)
             io.in(room).emit('public_join', {list: activeUsers});
         });
         socket.on('message', data => {
