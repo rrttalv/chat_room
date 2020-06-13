@@ -21,22 +21,29 @@
     display: inline-block;
 }
 
-#msg-view-body {   
-    height: 80%;
-}
-
-#msg-view-body #none p {
+.msg-view-body #none p {
     text-align: center;
     text-align: center;
     font-size: 18px;
     color: gray;
     letter-spacing: 0.3px;
+    padding-top: 1rem;
 }
 
-#msg-view-container {
+.msg-view-container {
     height: 95%;
 }
-#msg-view-header {
-    min-height: 5%;
-    max-height: 10%;
+.msg-view-header {
+    height: 5%;
+}
+
+
+.msg-view-body {     
+    height: 95%;
+}
+
+@media screen and (max-height: 500px) {
+    .msg-view-body { 
+        height: 90%;
+    }
 }

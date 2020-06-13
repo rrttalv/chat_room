@@ -5,6 +5,7 @@
     border: 1px solid rgba(0,0,0,0.1);
     border-radius: 25px;
     border-top-left-radius: 10px;
+    background-color: #ffffff;
 }
 
 .message-wrapper.personal {
@@ -13,10 +14,34 @@
     max-width: 50%;
     border-radius: 25px;
     border-bottom-right-radius: 10px;
+    background-color: #e4e9ec;
 }
 
 .message-content {
     padding: 0.25rem 0.1rem;
     font-weight: 400;
     font-size: 14px;
+    color: #000!important;
+}
+
+#msg-view-footer {
+    height: 10%;
+    display: block;
+}
+
+.flex-input-btn.btn.send {
+    display: inline-block;
+    width: 18%;
+    margin-top: 0;
+}
+
+.flex-input-msg.message-input.form-control {
+    width: 70%;
+    margin-right: 2%;
+    display: inline-block;
+}
+
+#msg-view-body {
+    height: 90%;
+    padding: 1rem 0;
 }
