@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import SendBtn from '../../SendBtn';
 import MessageInput from '../../MessageInput';
-
+import Message from './Message';
+import './style.css';
 export default class MessageView extends Component {
 
     constructor(props){
@@ -25,11 +26,18 @@ export default class MessageView extends Component {
     }
 
     render() {
-        const { receiverName, messages, userID } = this.props;
+        const { 
+            receiver: {userName: receiverName}, 
+            messages, 
+            userID, 
+            back 
+        } = this.props;
         return (
             <div className="msg-view-container">
                 <div className="msg-view-header">
-                    <span id="back-btn">
+                    <span 
+                    id="back-btn"
+                    onClick={back}>
                         Back
                     </span>
                     <h5 id="msg-receiver">
@@ -37,17 +45,30 @@ export default class MessageView extends Component {
                     </h5>
                 </div>
                 <div className="msg-view-body">
-                    {messages.map((msg, i) => (
+                    {messages ? messages.map((msg, i) => (
                         <Message
                             key={i} 
                             message={msg.message}
                             isOwner={msg.sender._id === userID}
                         />
-                    ))}
+                    )) 
+                    : 
+                    <Fragment>
+                    <div id="none">
+                        <p>No messages yet :0</p>
+                    </div>
+                    </Fragment>}
                 </div>
                 <div className="msg-view-footer">
-                    <MessageInput />
-                    <SendBtn />
+                    <MessageInput
+                    customClass={"flex-input-msg"}
+                    placeholder={"Your message"}
+                    name={"message"}
+                    />
+                    <SendBtn
+                    customClass={"flex-input-btn"}
+                    text={"Send"}
+                    />
                 </div>
             </div>
         )

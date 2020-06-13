@@ -1,0 +1,42 @@
+#back-btn {
+    color: #607ae6;
+    width: 10%;
+    text-align: left;
+    display: block;
+    margin-top: 2px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+/*
+    Could use display:flex; on the parent element, but because flex boxes 
+    are often not compatible with older browsers 
+    I am doing this old-school.
+*/
+
+#msg-receiver {
+    width: 80%;
+    margin-right: 10%;
+    text-align: center;
+    display: inline-block;
+}
+
+#msg-view-body {   
+    height: 80%;
+}
+
+#msg-view-body #none p {
+    text-align: center;
+    text-align: center;
+    font-size: 18px;
+    color: gray;
+    letter-spacing: 0.3px;
+}
+
+#msg-view-container {
+    height: 95%;
+}
+#msg-view-header {
+    min-height: 5%;
+    max-height: 10%;
+}

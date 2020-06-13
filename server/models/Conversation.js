@@ -40,6 +40,10 @@ export const saveMessage = async data => {
     }
 }
 
+export const getConversationByRoom = async roomID => {
+    return await model.findOne({roomID: roomID});
+};
+
 export const saveNewConversation = async (data, message) => {
     const { sender, receiver, roomID } = data;
     const conv = new model({

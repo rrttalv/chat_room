@@ -1,5 +1,12 @@
-import { saveMessage } from '../models/Conversation';
+import { 
+    saveMessage, 
+    getConversationByRoom,
+} from '../models/Conversation';
+import {
+    findUser
+} from '../models/User';
 import { redisConfig } from '../config/index';
+import { generateRoomID } from '../helper/util';
 
 const Queue = require('bull');
 
@@ -40,10 +47,22 @@ export default io => {
             }
             io.in('public-room').emit('public_join', {list: activeUsers})
         });
-        socket.on('join_private', data => {
-            const { room } = data;
-            console.log(data);
-            //socket.join(room);
+        socket.on('join_private', async data => {
+            const { ids } = data;
+            //list[0] is always the receiver's ID and list[1] the current user's ID
+            const list = ids.split('_');
+            const roomID = generateRoomID(list[0], list[1]);
+            const convData = await Promise.all(
+                [
+                    getConversationByRoom(roomID),
+                    findUser(list[0]),
+                ]
+            );
+            socket.join(roomID);
+            io.in(roomID).emit('existing_data', {
+                selected: convData[0] || {},
+                receiver: convData[1]
+            });
         })
         socket.on('send_message', data => {
             console.log(data);

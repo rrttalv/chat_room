@@ -13,6 +13,7 @@ const initState = {
     socket: undefined,
     loading: false,
     selected: {},
+    receiver: {},
 }
 
 export default (state=initState, action) => {

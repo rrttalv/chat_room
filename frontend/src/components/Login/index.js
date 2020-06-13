@@ -35,7 +35,7 @@ class Login extends Component {
                     !loading ? 
                     <FormGroup>
                         <MessageInput 
-                            placeHolder={"username"}
+                            placeholder={"username"}
                             name={"username"}
                             handleChange={this.handleChange}
                         />
