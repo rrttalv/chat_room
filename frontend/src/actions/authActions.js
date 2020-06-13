@@ -1,14 +1,15 @@
 import { AUTH_LOADING,
     AUTH_SUCCESS } from './constants'
-import { history } from '../';
+import { history } from '../index';
 
 export const getAuthStatus = () => (dispatch, getState) => {
         const url = '/auth/state';
         if(getState().auth.user){
             fetch(url, getOpts(getState, 'GET')).then(data => {
+                const { user } = data;
                 dispatch({
                     type: AUTH_SUCCESS,
-                    user: data.user,
+                    payload: {isAuth: true, user},
                 })
             }).catch(err => {
                 //If server returns an error then the user is not "authenticated"
@@ -25,14 +26,17 @@ export const initUser = body => (dispatch, getState) => {
         type: AUTH_LOADING,
     });
     const url = '/auth/login';
-    fetch(url, getOpts(getState, 'POST', body)).then(data => {
+    fetch(url, getOpts(getState, 'POST', body)).then(
+        data => data.json()
+    ).then(data => {
         const { user } = data;
         dispatch({
             type: AUTH_SUCCESS,
-            user: user,
+            payload: {isAuth: true, user},
         });
-        localStorage.setItem('user', user);
+        localStorage.setItem('user', JSON.stringify(user));
         history.push('/list');
+        return;
     }).catch(err => {
         localStorage.clear();
         console.log(err);

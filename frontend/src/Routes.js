@@ -8,15 +8,16 @@ import MessageView from './components/MessageView/index';
 
 class Routes extends Component {
     render(){
-        const { loading, auth } = this.props.auth;
+        const { loading, isAuth } = this.props.auth;
+        console.log(this.props)
         return (
             loading ? 
             <div></div>
             :
             <Switch>
                 <Route exact path="/" component={Login} />
-                <AuthRoute authenticated={auth} exact path="/list" component={MessageList} />
-                <AuthRoute authenticated={auth} exact path="/list/:conversationID" component={MessageView} />
+                <AuthRoute authenticated={isAuth} exact path="/list" component={MessageList} />
+                <AuthRoute authenticated={isAuth} exact path="/list/:conversationID" component={MessageView} />
             </Switch>
         )
     }
@@ -24,7 +25,7 @@ class Routes extends Component {
 
 const propMap = state => {
     return {
-        auth: state.auth.isAuth,
+        auth: state.auth,
     }
 };
 
