@@ -32,9 +32,14 @@ class MessagingPage extends Component {
     }
 
     render() {
+        const { online } = this.props.conversations;
         return (
             <div>
-                
+                {online.map((elem, i) => (
+                    <div key={i}>
+                        {elem}
+                    </div>
+                ))}
             </div>
         )
     }
