@@ -9,7 +9,6 @@ import MessageView from './components/MessageView/index';
 class Routes extends Component {
     render(){
         const { loading, isAuth } = this.props.auth;
-        console.log(this.props)
         return (
             loading ? 
             <div></div>

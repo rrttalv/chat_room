@@ -6,8 +6,15 @@ import { Provider } from 'react-redux';
 import store from './store';
 import { createBrowserHistory } from 'history';
 import { Router } from 'react-router-dom';
+import { getAuthStatus } from './actions/authActions';
 
 export const history = createBrowserHistory();
+
+export const componentWillMount = () => {
+  store.dispatch(getAuthStatus());
+};
+
+componentWillMount();
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,24 +1,33 @@
 import { AUTH_LOADING,
-    AUTH_SUCCESS } from './constants'
+    AUTH_SUCCESS, 
+    STOP_LOADING } from './constants'
 import { history } from '../index';
 
 export const getAuthStatus = () => (dispatch, getState) => {
-        const url = '/auth/state';
-        if(getState().auth.user){
-            fetch(url, getOpts(getState, 'GET')).then(data => {
-                const { user } = data;
-                dispatch({
-                    type: AUTH_SUCCESS,
-                    payload: {isAuth: true, user},
-                })
-            }).catch(err => {
-                //If server returns an error then the user is not "authenticated"
-                localStorage.clear();
-                console.log(err);
+    dispatch({
+        type: AUTH_LOADING,
+    })
+    const url = '/auth/state';
+    if(getState().auth.user){
+        fetch(url, getOpts(getState, 'GET'))
+        .then(data => data.json())
+        .then(data => {
+            const { user } = data;
+            dispatch({
+                type: AUTH_SUCCESS,
+                payload: {isAuth: true, user},
             })
-
-        }
-        return;
+        }).catch(err => {
+            //If server returns an error then the user is not "authenticated"
+            localStorage.clear();
+            console.log(err);
+        });
+    }else{
+        dispatch({
+            type: STOP_LOADING
+        })
+    }
+    return;
 }
 
 export const initUser = body => (dispatch, getState) => {
@@ -26,9 +35,9 @@ export const initUser = body => (dispatch, getState) => {
         type: AUTH_LOADING,
     });
     const url = '/auth/login';
-    fetch(url, getOpts(getState, 'POST', body)).then(
-        data => data.json()
-    ).then(data => {
+    fetch(url, getOpts(getState, 'POST', body))
+    .then(data => data.json())
+    .then(data => {
         const { user } = data;
         dispatch({
             type: AUTH_SUCCESS,
@@ -40,7 +49,7 @@ export const initUser = body => (dispatch, getState) => {
     }).catch(err => {
         localStorage.clear();
         console.log(err);
-    })
+    });
 }
 
 export const getOpts = (getState, method, body=undefined) => {

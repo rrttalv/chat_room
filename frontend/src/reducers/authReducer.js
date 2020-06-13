@@ -1,8 +1,8 @@
-import { AUTH_LOADING, AUTH_SUCCESS } from '../actions/constants';
+import { AUTH_LOADING, AUTH_SUCCESS, STOP_LOADING } from '../actions/constants';
 
 const initState = {
     isAuth: false,
-    user: false,
+    user: localStorage.getItem('user'),
 }
 
 export default (state = initState, action) => {
@@ -17,6 +17,11 @@ export default (state = initState, action) => {
                 ...state,
                 loading: false,
                 ...action.payload,
+            }
+        case STOP_LOADING:
+            return {
+                loading: false,
+                ...action.payload
             }
         default: 
             return state

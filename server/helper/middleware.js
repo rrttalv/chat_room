@@ -1,20 +1,25 @@
 import { findUser } from '../models/User';
 
 export const authenticate = (req, res, next) => {
-    const user = req.header('x-auth-token');
-    if(!user){
-        res.status(401).json({ message: 'No user!' });
-    }else{
-        findUser(user._id).then(user => {
-            if(user){
-                req.user = user;
-            }else{
-                res.status(401).json({ message: 'No user!' });
-            }
-            next();
-        }).catch(err => {
-            console.log(err);
-            next(err);
-        })
+    try{
+        const headerUser = req.header('x-auth-token');
+        if(!headerUser){
+            res.status(401).json({ message: 'No user!' });
+        }else{
+            const u = JSON.parse(headerUser);
+            findUser(u._id).then(user => {
+                if(user){
+                    req.user = user;
+                }else{
+                    res.status(401).json({ message: 'No user!' });
+                }
+                next();
+            }).catch(err => {
+                console.log(err);
+                next(err);
+            })
+        }
+    }catch(err){
+        next(err);
     }
 }
