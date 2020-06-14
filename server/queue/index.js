@@ -16,6 +16,11 @@ const saveQueue = new Queue('saveConversation', {
 });
 
 saveQueue.process((job, done) => {
+    /**
+     * If the queue was huge then the seen job could make it possible that some
+     * messages would never get saved. But the backlog would have to be very large for
+     * that to happen.
+     */
     if(job.data.seenQueue){
         const { convID, joinee } = job.data;
         saveSeen(convID, joinee).then(() => {

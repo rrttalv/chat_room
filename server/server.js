@@ -3,7 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import auth from './routes/auth';
-import dashboard from './routes/dashboard';
 import socket from 'socket.io';
 import queue from './queue';
 require('./config');
@@ -17,7 +16,6 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/auth', auth);
-app.use('/dash', dashboard);
 const { SERVER_PORT: sp } = process.env;
 
 const server = app.listen(sp, console.log.bind(console, 'Server started on port: ' + sp));

@@ -69,35 +69,34 @@ export const saveSeen = async (_id, participantID) => {
     const { messages } = conv.toObject();
     let msgLen = messages.length;
     if(msgLen){
+        let replaceStart = msgLen;
         msgLen--;
         //Return nothing since the participant who joined is not the receiver of the last message
         if(messages[msgLen].receiver !== participantID){
             return;
         };
         const unseenMessages = [];
-        let replaceStart = 0;
         let hasUnseen = true;
         /**
          * Start from the end of the array and loop until the receiver id changes or
          * the messages are already seen
          */
-        while (hasUnseen && msgLen) {
+        while (hasUnseen && msgLen >= 0) {
             const msg = messages[msgLen];
             const { receiver, seen } = msg;
             if(receiver === participantID && !seen){
                 msg.seen = true;
                 unseenMessages.push(msg);
-                replaceStart++;
+                replaceStart--;
             }else{
                 hasUnseen = false;
             }
             msgLen--;
         };
-        if(unseenMessages.length && replaceStart){
+        if(unseenMessages.length){
             unseenMessages.reverse();
             messages.splice(replaceStart, unseenMessages.length, ...unseenMessages);
         };
-        console.log(messages);
         return await model.updateOne({_id: _id}, {"$set": {"messages": messages}});
     };
 };
