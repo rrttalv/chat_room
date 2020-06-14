@@ -30,12 +30,9 @@ export const listConversations = () => (dispatch, getState) => {
     });
 };
 
-export const updateChat = data => (dispatch, getState) => {
+export const updateChat = newData => (dispatch, getState) => {
     const prev = getPrev(getState);
-    const { selected } = prev;
-    if(selected.data.messages && selected.data._id === data._id){
-        selected.messages.push(data.message);
-    };
+    console.log(newData);
     dispatch({
         type: SET_CONVERSATION,
         payload: {...prev},

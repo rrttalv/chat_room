@@ -16,7 +16,10 @@ class Login extends Component {
 
     handleChange = e => {
         if(e.target.keyCode === 13){
+            this.handleAuth();
+            return;
         }
+        console.log(e.target.value)
         this.setState({[e.target.name]: e.target.value});
     }
 
@@ -37,6 +40,7 @@ class Login extends Component {
                         <MessageInput 
                             placeholder={"username"}
                             name={"username"}
+                            value={this.state.username}
                             handleChange={this.handleChange}
                         />
                         <SendBtn 

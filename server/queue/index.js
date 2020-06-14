@@ -1,5 +1,5 @@
 import { 
-    saveMessage, 
+    saveConversation, 
     getConversationByRoom,
 } from '../models/Conversation';
 import {
@@ -15,13 +15,12 @@ const saveQueue = new Queue('saveConversation', {
 });
 
 saveQueue.process((job, done) => {
-    console.log(job.data);
-    done(null);
-    /*saveMessage(job.data).then(() => {
+    saveConversation(job.data).then(() => {
         done(null);
     }).catch(err => {
+        console.log(err);
         done(new Error(err));
-    })*/
+    });
 });
 
 const activeUsers = [];
@@ -67,14 +66,26 @@ export default io => {
                 },
                 participants: [convData[1], convData[2]],
             });
-        })
+        });
         /**
          * receive a message from the frontend and do stuff with it
          */
         socket.on('send_message', data => {
+            //If the room has more then 1 participants, then the message is instantly seen
             data.seen = io.sockets.adapter.rooms[data.roomID].length > 1;
-            console.log(data);
-            //saveQueue.add(data);
+            const { conversationID } = data;
+            let toEmit;
+            /**
+             * If the message doesn't exist in our database then we save if and send it back
+             * Otherwise we queue the message save
+             */
+            if(!conversationID){
+                toEmit = saveConversation(data);
+            }else{
+                toEmit = data;
+                saveQueue.add(data);
+            };
+            io.in(data.roomID).emit('new_message', toEmit);
         });
         socket.on('seen_message', data => {})
     });

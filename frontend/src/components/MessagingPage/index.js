@@ -57,17 +57,28 @@ class MessagingPage extends Component {
         }));
     }
 
-    update = data => {
-        console.log(data);
-        //this.props.updateChat(data);
+    update = newMessage => {
+        let { selected: { data } } = this.props.conversations;
+        /**
+         * If there is an existing conversation then we just add a new message into
+         * the existing state data object
+         * 
+         * If there is no existing conversation, then the newMessage object will be a completely
+         * new conversation Object sent from the server
+         */
+        if(data){
+            data.messages.push(newMessage);    
+        }else{
+            data = newMessage;
+        }
+        console.log(this.props)
+        this.props.updateChat(data);
     }
 
     render() {
         const { online, socket, participants, selected: {data, roomID} } = this.props.conversations;
         const { _id } = this.props.user;
         const { displayChat } = this.state;
-        console.log(participants);
-        console.log(this.props);
         return (
             <div id="conversation-container">
                     {
@@ -79,7 +90,7 @@ class MessagingPage extends Component {
                             back={this.toggleChat}
                             messageData={data}
                             roomID={roomID}
-                            userID={_id}
+                            sender={_id}
                             receiver={participants.find(({_id: partID}) => partID !== _id)}
                         />
                     </Fragment>

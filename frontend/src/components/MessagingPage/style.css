@@ -10,4 +10,7 @@
 #conversation-container {
     padding: 1rem 0.5rem;
     height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 100%;
 }

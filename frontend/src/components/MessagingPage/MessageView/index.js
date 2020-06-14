@@ -21,15 +21,16 @@ export default class MessageView extends Component {
     }
 
     sendMessage = () => {
-        const { roomID, socket, messageData, userID } = this.props;
+        const { roomID, socket, messageData, sender, receiver } = this.props;
         const { message } = this.state;
         const conversationID = messageData ? messageData._id : undefined;
         if(message.length){
             socket.emit('send_message', {
                 roomID,
                 message,
-                userID,
-                conversationID: conversationID,
+                sender,
+                receiver: receiver._id,
+                conversationID,
             });
             this.setState({
                 message: '',
@@ -52,7 +53,7 @@ export default class MessageView extends Component {
         const { 
             receiver: {userName}, 
             messageData, 
-            userID, 
+            sender, 
             back 
         } = this.props;
         return (
@@ -75,7 +76,7 @@ export default class MessageView extends Component {
                         <Message
                             key={i} 
                             message={msg.message}
-                            isOwner={msg.sender._id === userID}
+                            isOwner={msg.sender === sender}
                         />
                     )) 
                     : 

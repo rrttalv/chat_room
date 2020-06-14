@@ -6,11 +6,11 @@ export default class Message extends Component {
         const { message, isOwner } = this.props;
         return (
             <div className={isOwner ? 'message-wrapper personal' : 'message-wrapper'}>
-                <span
-                    className='message-content'
-                >
-                    {message}
-                </span>
+                <div className="content-wrapper">
+                    <span className='message-content'>
+                        {message}
+                    </span>
+                </div>
             </div>
         )
     }

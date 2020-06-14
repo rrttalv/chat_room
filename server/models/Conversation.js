@@ -26,10 +26,11 @@ const convoSchema = new Schema({
 
 const model = mongoose.model('Conversation', convoSchema);
 
-export const saveMessage = async data => {
-    const { userID, message, seen, conversationID } = data;
+export const saveConversation = async data => {
+    const { sender, receiver, message, seen, conversationID } = data;
     const newMessage = {
-        userID,
+        sender,
+        receiver,
         message,
         seen,
     };
@@ -48,8 +49,8 @@ export const saveNewConversation = async (data, message) => {
     const { sender, receiver, roomID } = data;
     const conv = new model({
         participants: [
-            {...sender}, 
-            {...receiver}
+            sender,
+            receiver
         ],
         messages: [message],
         roomID,
