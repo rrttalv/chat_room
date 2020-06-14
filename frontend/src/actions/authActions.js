@@ -28,7 +28,7 @@ export const getAuthStatus = () => (dispatch, getState) => {
         })
     }
     return;
-}
+};
 
 export const initUser = body => (dispatch, getState) => {
     dispatch({
@@ -69,4 +69,4 @@ export const getOpts = (getState, method, body=undefined) => {
     }
     opts.headers['x-auth-user'] = user
     return opts;
-}
+};
