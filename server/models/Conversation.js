@@ -56,6 +56,50 @@ export const saveNewConversation = async (data, message) => {
         roomID,
     });
     return await conv.save();
-}
+};
+
+/**
+ * @param {*} id 
+ * @param {*} participantID 
+ * Takes in a conversation ID and a participant's ID.
+ * Updates to conversation message seen status.
+ */
+export const saveSeen = async (_id, participantID) => {
+    const conv = await model.findOne({_id});
+    const { messages } = conv.toObject();
+    let msgLen = messages.length;
+    if(msgLen){
+        msgLen--;
+        //Return nothing since the participant who joined is not the receiver of the last message
+        if(messages[msgLen].receiver !== participantID){
+            return;
+        };
+        const unseenMessages = [];
+        let replaceStart = 0;
+        let hasUnseen = true;
+        /**
+         * Start from the end of the array and loop until the receiver id changes or
+         * the messages are already seen
+         */
+        while (hasUnseen && msgLen) {
+            const msg = messages[msgLen];
+            const { receiver, seen } = msg;
+            if(receiver === participantID && !seen){
+                msg.seen = true;
+                unseenMessages.push(msg);
+                replaceStart++;
+            }else{
+                hasUnseen = false;
+            }
+            msgLen--;
+        };
+        if(unseenMessages.length && replaceStart){
+            unseenMessages.reverse();
+            messages.splice(replaceStart, unseenMessages.length, ...unseenMessages);
+        };
+        console.log(messages);
+        return await model.updateOne({_id: _id}, {"$set": {"messages": messages}});
+    };
+};
 
 export default model;

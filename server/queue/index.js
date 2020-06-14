@@ -1,5 +1,6 @@
 import { 
-    saveConversation, 
+    saveConversation,
+    saveSeen,
     getConversationByRoom,
 } from '../models/Conversation';
 import {
@@ -15,12 +16,22 @@ const saveQueue = new Queue('saveConversation', {
 });
 
 saveQueue.process((job, done) => {
-    saveConversation(job.data).then(() => {
-        done(null);
-    }).catch(err => {
-        console.log(err);
-        done(new Error(err));
-    });
+    if(job.data.seenQueue){
+        const { convID, joinee } = job.data;
+        saveSeen(convID, joinee).then(() => {
+            done(null);
+        }).catch(err => {
+            console.log(err);
+            done(new Error(err));
+        });
+    }else{
+        saveConversation(job.data).then(() => {
+            done(null);
+        }).catch(err => {
+            console.log(err);
+            done(new Error(err));
+        });
+    }
 });
 
 const activeUsers = [];
@@ -49,7 +60,6 @@ export default io => {
         socket.on('join_private', async data => {
             const { receiver,
                 sender } = data;
-            //list[0] is always the receiver's ID and list[1] the current user's ID
             const roomID = generateRoomID(receiver, sender);
             const convData = await Promise.all(
                 [
@@ -58,6 +68,11 @@ export default io => {
                     findUser(sender),
                 ]
             );
+            saveQueue.add({
+                seenQueue: true, 
+                joinee: convData[2]._id,
+                convID: convData[0]._id
+            });
             socket.join(roomID);
             io.in(roomID).emit('existing_data', {
                 selected: {
@@ -90,7 +105,6 @@ export default io => {
         socket.on('leave_room', data => {
             const { roomID } = data;
             socket.leave(roomID);
-        })
-        socket.on('seen_message', data => {})
+        });
     });
 }

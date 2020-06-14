@@ -1,5 +1,4 @@
 /**
- * 
  * @param {*} id1 
  * @param {*} id2
  * Takes in two objectIDs in any order and sorts them.
