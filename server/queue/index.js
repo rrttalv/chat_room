@@ -70,7 +70,7 @@ export default io => {
         /**
          * receive a message from the frontend and do stuff with it
          */
-        socket.on('send_message', data => {
+        socket.on('send_message', async data => {
             //If the room has more then 1 participants, then the message is instantly seen
             data.seen = io.sockets.adapter.rooms[data.roomID].length > 1;
             const { conversationID } = data;
@@ -80,13 +80,17 @@ export default io => {
              * Otherwise we queue the message save
              */
             if(!conversationID){
-                toEmit = saveConversation(data);
+                toEmit = await saveConversation(data);
             }else{
                 toEmit = data;
                 saveQueue.add(data);
             };
             io.in(data.roomID).emit('new_message', toEmit);
         });
+        socket.on('leave_room', data => {
+            const { roomID } = data;
+            socket.leave(roomID);
+        })
         socket.on('seen_message', data => {})
     });
 }

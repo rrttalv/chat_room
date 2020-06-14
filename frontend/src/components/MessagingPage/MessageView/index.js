@@ -17,8 +17,34 @@ export default class MessageView extends Component {
         const { socket, updateConversation } = this.props;
         socket.on('new_message', data => {
             updateConversation(data);
+            this.scrollOnAction();
         });
+    };
+
+    componentDidUpdate = prev => {
+        if(prev.loading !== this.props.loading){
+            this.scrollOnAction();
+        }
     }
+
+    goBack = () => {
+        const { back, socket, roomID } = this.props;
+        socket.emit('leave_room', {
+            roomID,
+        });
+        socket.off('new_message');
+        back();
+    };
+
+    scrollOnAction = () => {
+        const msgBody = document.querySelector('.msg-view-body');
+        if(msgBody){
+            const { offsetHeight, scrollHeight } = msgBody;
+            if(scrollHeight > offsetHeight){
+                msgBody.scroll(0, scrollHeight);
+            };
+        };
+    };
 
     sendMessage = () => {
         const { roomID, socket, messageData, sender, receiver } = this.props;
@@ -35,6 +61,7 @@ export default class MessageView extends Component {
             this.setState({
                 message: '',
             });
+            this.scrollOnAction();
         }
     }
 
@@ -53,55 +80,61 @@ export default class MessageView extends Component {
         const { 
             receiver: {userName}, 
             messageData, 
-            sender, 
-            back 
+            sender,
+            loading,
         } = this.props;
         return (
-            <div className="msg-view-container">
-                <div className="msg-view-header">
-                    <span 
-                    id="back-btn"
-                    onClick={back}>
-                        Back
-                    </span>
-                    <h5 id="msg-receiver">
-                        {userName}
-                    </h5>
-                </div>
-                <div className="msg-view-body">
-                    {messageData 
-                    && 
-                    messageData.messages ? 
-                    messageData.messages.map((msg, i) => (
-                        <Message
-                            key={i} 
-                            message={msg.message}
-                            isOwner={msg.sender === sender}
-                        />
-                    )) 
-                    : 
-                    <Fragment>
-                    <div id="none">
-                        <p>No messages yet :0</p>
+            <Fragment>
+                {loading ? 
+                    <span>loading...</span>
+                    :
+                    <div className="msg-view-container">
+                        <div className="msg-view-header">
+                            <span 
+                            id="back-btn"
+                            onClick={this.goBack}>
+                                Back
+                            </span>
+                            <h5 id="msg-receiver">
+                                {userName}
+                            </h5>
+                        </div>
+                        <div className="msg-view-body">
+                            {messageData 
+                            && 
+                            messageData.messages.length ? 
+                            messageData.messages.map((msg, i) => (
+                                <Message
+                                    key={i} 
+                                    message={msg.message}
+                                    isOwner={msg.sender === sender}
+                                />
+                            )) 
+                            : 
+                            <Fragment>
+                            <div id="none">
+                                <p>No messages yet :0</p>
+                            </div>
+                            </Fragment>}
+                        </div>
+                        <div className="msg-view-footer">
+                            <MessageInput
+                                customClass={"flex-input-msg"}
+                                placeholder={"Your message"}
+                                name={"message"}
+                                handleKeyup={this.handleSubmit}
+                                handleChange={this.handleChange}
+                                value={this.state.message}
+                            />
+                            <SendBtn
+                                customClass={"flex-input-btn"}
+                                text={"Send"}
+                                handleClick={this.handleSubmit}
+                            />
+                        </div>
                     </div>
-                    </Fragment>}
-                </div>
-                <div className="msg-view-footer">
-                    <MessageInput
-                        customClass={"flex-input-msg"}
-                        placeholder={"Your message"}
-                        name={"message"}
-                        handleKeyup={this.handleSubmit}
-                        handleChange={this.handleChange}
-                        value={this.state.message}
-                    />
-                    <SendBtn
-                        customClass={"flex-input-btn"}
-                        text={"Send"}
-                        handleClick={this.handleSubmit}
-                    />
-                </div>
-            </div>
+                }
+        </Fragment>
         )
     }
 }

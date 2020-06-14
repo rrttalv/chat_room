@@ -16,6 +16,7 @@ class MessagingPage extends Component {
         this.state = {
             userList: [],
             displayChat: false,
+            chatLoading: false,
         }
     }
 
@@ -37,9 +38,10 @@ class MessagingPage extends Component {
             const sanitizedList = data.list.filter(({_id}) => _id !== user._id);
             this.props.setOnline(sanitizedList);
         });
-    }
+    };
 
     openChat = (receiver, sender) => {
+        this.setState({chatLoading: true});
         let { socket } = this.props.conversations;
         socket.emit('join_private', {
             receiver,
@@ -47,15 +49,19 @@ class MessagingPage extends Component {
         });
         socket.on('existing_data', data => {
             this.props.setChat(data);
+            this.setState({chatLoading: false});
         });
         this.toggleChat();
-    }
+    };
 
-    toggleChat = () => {
+    toggleChat = (back=false) => {
+        if(back){
+            this.props.setChat({selected:{}})
+        }
         this.setState(prevState => ({
             displayChat: !prevState.displayChat,
         }));
-    }
+    };
 
     update = newMessage => {
         let { selected: { data } } = this.props.conversations;
@@ -71,14 +77,13 @@ class MessagingPage extends Component {
         }else{
             data = newMessage;
         }
-        console.log(this.props)
         this.props.updateChat(data);
     }
 
     render() {
         const { online, socket, participants, selected: {data, roomID} } = this.props.conversations;
         const { _id } = this.props.user;
-        const { displayChat } = this.state;
+        const { displayChat, chatLoading } = this.state;
         return (
             <div id="conversation-container">
                     {
@@ -87,11 +92,12 @@ class MessagingPage extends Component {
                         <MessageView 
                             socket={socket}
                             updateConversation={this.update}
-                            back={this.toggleChat}
+                            back={() => this.toggleChat(true)}
                             messageData={data}
                             roomID={roomID}
                             sender={_id}
                             receiver={participants.find(({_id: partID}) => partID !== _id)}
+                            loading={chatLoading}
                         />
                     </Fragment>
                     :

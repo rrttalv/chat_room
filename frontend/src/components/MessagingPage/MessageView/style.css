@@ -37,6 +37,11 @@
     height: 5%;
 }
 
+.msg-view-footer {    
+    margin-top: 1%;
+    height: 5%;
+}
+
 .msg-view-body::-webkit-scrollbar {
     width: 6px;
     background-color: #F5F5F5;
@@ -46,14 +51,14 @@
     background-color: #9ea2a6;
 }
 
-.msg-view-body {     
-    height: 95%;
+.msg-view-body {    
+    height: 94%;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 @media screen and (max-height: 500px) {
     .msg-view-body { 
-        height: 90%;
+        height: 89%;
     }
 }
