@@ -39,10 +39,11 @@ class MessagingPage extends Component {
         });
     }
 
-    openChat = ids => {
+    openChat = (receiver, sender) => {
         let { socket } = this.props.conversations;
         socket.emit('join_private', {
-            ids,
+            receiver,
+            sender,
         });
         socket.on('existing_data', data => {
             this.props.setChat(data);
@@ -58,23 +59,28 @@ class MessagingPage extends Component {
 
     update = data => {
         console.log(data);
+        //this.props.updateChat(data);
     }
 
     render() {
-        const { online, socket, receiver, selected: {messages} } = this.props.conversations;
+        const { online, socket, participants, selected: {data, roomID} } = this.props.conversations;
         const { _id } = this.props.user;
         const { displayChat } = this.state;
+        console.log(participants);
+        console.log(this.props);
         return (
             <div id="conversation-container">
                     {
-                    displayChat ?
+                    displayChat && participants.length ?
                     <Fragment>
                         <MessageView 
                             socket={socket}
                             updateConversation={this.update}
                             back={this.toggleChat}
-                            messages={messages}
-                            receiver={receiver}
+                            messageData={data}
+                            roomID={roomID}
+                            userID={_id}
+                            receiver={participants.find(({_id: partID}) => partID !== _id)}
                         />
                     </Fragment>
                     :
@@ -86,7 +92,7 @@ class MessagingPage extends Component {
                                 key={i}
                                 name={elem.userName}
                                 handleClick={() => this.openChat(
-                                    elem._id + '_' + _id
+                                    elem._id, _id
                                 )}
                             />
                         ))

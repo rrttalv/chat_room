@@ -33,7 +33,7 @@ export const listConversations = () => (dispatch, getState) => {
 export const updateChat = data => (dispatch, getState) => {
     const prev = getPrev(getState);
     const { selected } = prev;
-    if(selected.messages && selected._id === data._id){
+    if(selected.data.messages && selected.data._id === data._id){
         selected.messages.push(data.message);
     };
     dispatch({

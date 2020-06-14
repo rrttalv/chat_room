@@ -48,23 +48,31 @@ export default io => {
             io.in('public-room').emit('public_join', {list: activeUsers})
         });
         socket.on('join_private', async data => {
-            const { ids } = data;
+            const { receiver,
+                sender } = data;
             //list[0] is always the receiver's ID and list[1] the current user's ID
-            const list = ids.split('_');
-            const roomID = generateRoomID(list[0], list[1]);
+            const roomID = generateRoomID(receiver, sender);
             const convData = await Promise.all(
                 [
                     getConversationByRoom(roomID),
-                    findUser(list[0]),
+                    findUser(receiver),
+                    findUser(sender),
                 ]
             );
             socket.join(roomID);
             io.in(roomID).emit('existing_data', {
-                selected: convData[0] || {},
-                receiver: convData[1]
+                selected: {
+                    data: convData[0],
+                    roomID
+                },
+                participants: [convData[1], convData[2]],
             });
         })
+        /**
+         * receive a message from the frontend and do stuff with it
+         */
         socket.on('send_message', data => {
+            data.seen = io.sockets.adapter.rooms[data.roomID].length > 1;
             console.log(data);
             //saveQueue.add(data);
         });

@@ -27,14 +27,14 @@ const convoSchema = new Schema({
 const model = mongoose.model('Conversation', convoSchema);
 
 export const saveMessage = async data => {
-    const { userID, message, seen, _id } = data;
+    const { userID, message, seen, conversationID } = data;
     const newMessage = {
         userID,
         message,
         seen,
     };
-    if(_id){
-        return await model.updateOne({_id: _id}, {'$push': {'messages': newMessage}});
+    if(conversationID){
+        return await model.updateOne({_id: conversationID}, {'$push': {'messages': newMessage}});
     }else{
         return await saveNewConversation(data, newMessage);
     }

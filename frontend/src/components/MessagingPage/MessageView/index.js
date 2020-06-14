@@ -13,22 +13,45 @@ export default class MessageView extends Component {
         }
     }
 
-    sendMessage = () => {
-        const { roomID, socket, updateConversation } = this.props;
-        const { message } = this.state;
-        socket.emit('send_message', {
-            roomID,
-            message,
-        });
+    componentDidMount = () => {
+        const { socket, updateConversation } = this.props;
         socket.on('new_message', data => {
             updateConversation(data);
         });
     }
 
+    sendMessage = () => {
+        const { roomID, socket, messageData, userID } = this.props;
+        const { message } = this.state;
+        const conversationID = messageData ? messageData._id : undefined;
+        if(message.length){
+            socket.emit('send_message', {
+                roomID,
+                message,
+                userID,
+                conversationID: conversationID,
+            });
+            this.setState({
+                message: '',
+            });
+        }
+    }
+
+    handleSubmit = e => {
+        if(e.keyCode === 13 || e.type === 'click'){
+            this.sendMessage()
+        }
+    }
+
+    handleChange = e => {
+        const { value, name } = e.target;
+        this.setState({[name]: value});
+    }
+
     render() {
         const { 
-            receiver: {userName: receiverName}, 
-            messages, 
+            receiver: {userName}, 
+            messageData, 
             userID, 
             back 
         } = this.props;
@@ -41,11 +64,14 @@ export default class MessageView extends Component {
                         Back
                     </span>
                     <h5 id="msg-receiver">
-                        {receiverName}
+                        {userName}
                     </h5>
                 </div>
                 <div className="msg-view-body">
-                    {messages ? messages.map((msg, i) => (
+                    {messageData 
+                    && 
+                    messageData.messages ? 
+                    messageData.messages.map((msg, i) => (
                         <Message
                             key={i} 
                             message={msg.message}
@@ -61,13 +87,17 @@ export default class MessageView extends Component {
                 </div>
                 <div className="msg-view-footer">
                     <MessageInput
-                    customClass={"flex-input-msg"}
-                    placeholder={"Your message"}
-                    name={"message"}
+                        customClass={"flex-input-msg"}
+                        placeholder={"Your message"}
+                        name={"message"}
+                        handleKeyup={this.handleSubmit}
+                        handleChange={this.handleChange}
+                        value={this.state.message}
                     />
                     <SendBtn
-                    customClass={"flex-input-btn"}
-                    text={"Send"}
+                        customClass={"flex-input-btn"}
+                        text={"Send"}
+                        handleClick={this.handleSubmit}
                     />
                 </div>
             </div>
