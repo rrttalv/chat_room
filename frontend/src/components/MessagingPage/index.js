@@ -14,10 +14,10 @@ class MessagingPage extends Component {
     constructor(props){
         super(props);
         this.state = {
-            userList: [],
             displayChat: false,
             chatLoading: false,
         }
+        this.refreshInterval = null;
     }
 
     componentDidMount(){
@@ -38,7 +38,38 @@ class MessagingPage extends Component {
             const sanitizedList = data.list.filter(({_id}) => _id !== user._id);
             this.props.setOnline(sanitizedList);
         });
+        socket.emit('get_unseen', {
+            userID: user._id,
+        });
+        this.setUnseenRefresh(socket, user._id);
+        socket.on('seen_info', data => {
+            const onlineUsers = this.props.conversations.online;
+            if(!onlineUsers){
+                return;
+            }
+            const idList = data.map(elem => elem.receiver);
+            const unseenAttached = onlineUsers.map(user => {
+                const idx = idList.indexOf(user._id);
+                if(idx !== -1){
+                    user.unseenMessageCount = data[idx].unseen;
+                };
+                return user;
+            });
+            this.props.setOnline(unseenAttached);
+        })
     };
+
+    /*
+        Get unseen conversations every 60 seconds
+        In production this number would be higher
+    */
+    setUnseenRefresh = (socket, userID) => {
+        this.refreshInterval = setInterval(() => {
+            socket.emit('get_unseen', {
+                userID,
+            });
+        }, 60000)
+    }
 
     openChat = (receiver, sender) => {
         this.setState({chatLoading: true});
@@ -111,6 +142,7 @@ class MessagingPage extends Component {
                                 handleClick={() => this.openChat(
                                     elem._id, _id
                                 )}
+                                unread={elem.unseenMessageCount}
                             />
                         ))
                         :

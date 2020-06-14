@@ -19,7 +19,6 @@ class Login extends Component {
             this.handleAuth();
             return;
         }
-        console.log(e.target.value)
         this.setState({[e.target.name]: e.target.value});
     }
 

@@ -31,4 +31,18 @@
     float: right;
     font-size: 12px;
     position: relative;
+    padding: 10px 20px;
+}
+
+.unread span:first-of-type {
+    margin-right: 5px;
+}
+
+.unread span:last-of-type {
+    color: #fff;
+    background-color: #4967e2;
+    border-radius: 50%;
+    padding: 3px 9px;
+    font-weight: 600;
+    vertical-align: text-top;
 }

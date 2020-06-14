@@ -31,18 +31,44 @@ const popQuery = {path: 'conversations', populate: {
     path: 'participants',
 }};
 
-export const getUserConversations = async userID => {
+
+export const attachConversation = async (userIDs, conversationID) => {
+    return await model.updateMany(
+        {_id: {'$in': userIDs}}, {'$push': {'conversations': conversationID}}
+    )
+};
+
+const getUnseenLen = (messages, userID) => {
+    let msgLen = messages.length;
+    const unseenMessages = [];
+    if(msgLen){
+        //Loop the messages from front to back. Throw error once we get to the seen messages.
+        let loop = true;
+        msgLen--;
+        for(let i = msgLen; loop && i >= 0; i--){
+            const msg = messages[msgLen];
+            const { receiver, seen } = msg;
+            if(receiver === userID && !seen){
+                unseenMessages.push(msg);
+            }else{
+                loop = !loop;
+            }
+        }
+    };
+    return unseenMessages.length;
+};
+
+export const getUnseenConversations = async userID => {
     const userData = await model.findOne({_id: userID}).populate(popQuery);
     const user = userData.toObject();
-    const convos = userData.toObject().conversations;
-    user.conversations = convos.map(cnv => (
+    const convos = user.conversations;
+    return convos.map(cnv => (
         //Only send back the last message to avoid sending data to the user that is not needed.
         {
-            ...cnv,
-            messages: cnv.messages[cnv.messages.length - 1]
+            receiver: (cnv.participants.find(({_id}) => _id !== userID))._id,
+            unseen: getUnseenLen(cnv.messages, userID),
         }
     ));
-    return user;
 };
 
 export const findUser = async id => {

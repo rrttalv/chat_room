@@ -6,7 +6,10 @@ import {
 
 export const updateChat = newData => (dispatch, getState) => {
     const prev = getPrev(getState);
-    console.log(newData);
+    const { selected } = prev;
+    if(!selected.data){
+        selected.data = newData;
+    }
     dispatch({
         type: SET_CONVERSATION,
         payload: {...prev},

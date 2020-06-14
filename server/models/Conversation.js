@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
-
+import {
+    attachConversation
+} from './User';
 const convoSchema = new Schema({
     participants: {
         type: [
@@ -39,7 +41,7 @@ export const saveConversation = async data => {
     }else{
         return await saveNewConversation(data, newMessage);
     }
-}
+};
 
 export const getConversationByRoom = async roomID => {
     return await model.findOne({roomID: roomID});
@@ -55,7 +57,9 @@ export const saveNewConversation = async (data, message) => {
         messages: [message],
         roomID,
     });
-    return await conv.save();
+    const conversation = await conv.save();
+    await attachConversation([sender, receiver], conversation._id);
+    return conversation;
 };
 
 /**

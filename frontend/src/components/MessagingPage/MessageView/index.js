@@ -28,10 +28,13 @@ export default class MessageView extends Component {
     }
 
     goBack = () => {
-        const { back, socket, roomID } = this.props;
+        const { back, socket, roomID, sender } = this.props;
         socket.emit('leave_room', {
             roomID,
         });
+        socket.emit('get_unseen', {
+            userID: sender,
+        })
         socket.off('new_message');
         back();
     };
