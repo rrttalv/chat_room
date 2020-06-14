@@ -4,7 +4,6 @@ import { AuthRoute } from "./AuthRoute"
 import { connect } from 'react-redux';
 import MessagingPage from './components/MessagingPage/index';
 import Login from './components/Login/index';
-import MessageView from './components/MessagingPage';
 
 class Routes extends Component {
     render(){
@@ -16,7 +15,6 @@ class Routes extends Component {
             <Switch>
                 <Route exact path="/" component={Login} />
                 <AuthRoute authenticated={isAuth} exact path="/list" component={MessagingPage} />
-                <AuthRoute authenticated={isAuth} exact path="/list/:conversationID" component={MessageView} />
             </Switch>
         )
     }
