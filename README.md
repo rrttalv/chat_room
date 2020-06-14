@@ -25,8 +25,13 @@ This project was developed using a free [mlab](https://mlab.com) mongoDB server.
 
 *Newer mongodb versions may not be compatible.*
 
-Create a .env file in the root of the project. Look at the .example.env file to see specific fields that should be defined. the database connection and redis connection information in the .env file.
+Create a .env file in the root of the project. Look at the .example.env file to see specific fields that should be defined.
 
-In the /frontend directory, run `npm install` and `npm start` to start the frontend of the applicaton. The frontend will be served on port 3000.
 
-In the /server directory, run `npm install` and `npm run start` to start the backend server.
+**Starting the application**
+
+Open two `terminal` or `cmd` instances.
+
+CD into the /frontend directory, run `npm install` and `npm start` to start the frontend of the applicaton. The frontend will be served on port 3000.
+
+CD into the /server directory, run `npm install` and `npm run start` to start the backend server.
