@@ -13,11 +13,13 @@ This project was built with the following versions
 
 The webserver should always run on port 8080 for the websocket connection to work. You should not reconfigure the node server port, otherwise you will have to reconf the websocket connection too.
 
-**Make sure you have a redis server up and running.**
+**Make sure you have a Redis server up and running.**
 
 [Get redis for windows](https://redislabs.com/ebook/appendix-a/a-3-installing-on-windows/a-3-2-installing-redis-on-window/)
 
 [Get redis for linux](https://redis.io/download)
+
+The Redis server should not be password protected.
 
 **Make sure you have a mongodb instance up and running.**
 
